@@ -35,6 +35,16 @@ public class ParserTest {
 		testParseEval("((x+3)*(y-4))", 32, Map.of("x", 5, "y", 8));
 	}
 	
+	@Test
+	public void testIfExpression() throws ParserException, EvaluatingException {
+		testParseEval("[(1>0)]?{5}:{6}", 5);
+		testParseEval("[((1+2)>(3+4))]?{12}:{-10}", -10);
+		testParseEval("[((10+20)>(20+10))]?{1}:{0}", 0);
+		assertParseError("[]?{}:{}");
+		assertParseError("[1 >]?{1}:{0}");
+		assertParseError("[1 > 2]?{1}:{}");
+	}
+	
 	private void assertParseError(final String input) {
 		try {
 			parse(input);

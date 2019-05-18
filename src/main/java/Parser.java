@@ -2,6 +2,10 @@ package main.java;
 
 import main.java.element.*;
 
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
+
 public class Parser {
 	
 	private final ParserSource source;
@@ -29,8 +33,32 @@ public class Parser {
 				throw source.error("SYNTAX ERROR");
 			}
 			return new BinaryExpression(left, right, op);
-//		} else if (testNext('[')) {
-		
+		} else if (testNext('[')) {
+			Expression rule = parseExpression();
+			if (!testNext(']')) {
+				throw source.error("SYNTAX ERROR");
+			}
+			if (!testNext('?')) {
+				throw source.error("SYNTAX ERROR");
+			}
+			if (!testNext('{')) {
+				throw source.error("SYNTAX ERROR");
+			}
+			Expression ifTrue = parseExpression();
+			if (!testNext('}')) {
+				throw source.error("SYNTAX ERROR");
+			}
+			if (!testNext(':')) {
+				throw source.error("SYNTAX ERROR");
+			}
+			if (!testNext('{')) {
+				throw source.error("SYNTAX ERROR");
+			}
+			Expression ifFalse = parseExpression();
+			if (!testNext('}')) {
+				throw source.error("SYNTAX ERROR");
+			}
+			return new IfExpression(rule, ifTrue, ifFalse);
 		} else {
 			throw source.error("SYNTAX ERROR");
 		}

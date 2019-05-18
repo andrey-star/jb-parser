@@ -5,14 +5,17 @@ import java.util.function.BinaryOperator;
 
 public class BinaryOperation {
 	
+	private String operation;
 	private static final Map<String, BinaryOperator<Integer>> opIdentifierToOperation = Map.of(
 			"+", Integer::sum,
 			"-", (a, b) -> a - b,
 			"*", (a, b) -> a * b,
-			"/", (a, b) -> a / b
+			"/", (a, b) -> a / b,
+			">", (a, b) -> (a > b ? 1 : 0),
+			"<", (a, b) -> (a < b ? 1 : 0),
+			"=", (a, b) -> (a.equals(b) ? 1 : 0)
 	);
 	
-	private String operation;
 	
 	public BinaryOperation(String operation) {
 		this.operation = operation;
