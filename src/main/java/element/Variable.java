@@ -2,6 +2,7 @@ package main.java.element;
 
 import main.java.EvaluatingException;
 
+import java.util.List;
 import java.util.Map;
 
 public class Variable extends Expression {
@@ -31,6 +32,6 @@ public class Variable extends Expression {
 		if (args.containsKey(name)) {
 			return args.get(name);
 		}
-		throw new EvaluatingException("No argument value for variable '" + name + "'");
+		throw new EvaluatingException("PARAMETER NOT FOUND", name);
 	}
 }

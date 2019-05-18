@@ -2,10 +2,6 @@ package main.java;
 
 import main.java.element.*;
 
-import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-
 public class Parser {
 	
 	private final ParserSource source;
@@ -17,6 +13,9 @@ public class Parser {
 	public Expression parse() throws ParserException {
 		source.nextChar();
 		Expression result = parseExpression();
+		if(!test(StringParserSource.END)) {
+			throw source.error("SYNTAX ERROR");
+		}
 		return result;
 	}
 	
@@ -26,42 +25,56 @@ public class Parser {
 		} else if (Character.isLetter(source.getChar())) {
 			return new Variable(parseIdentifier());
 		} else if (testNext('(')) {
-			Expression left = parseExpression();
-			BinaryOperation op = new BinaryOperation(parseOperation());
-			Expression right = parseExpression();
-			if (!testNext(')')) {
-				throw source.error("SYNTAX ERROR");
-			}
-			return new BinaryExpression(left, right, op);
+			return parseBinaryOperation();
 		} else if (testNext('[')) {
-			Expression rule = parseExpression();
-			if (!testNext(']')) {
-				throw source.error("SYNTAX ERROR");
-			}
-			if (!testNext('?')) {
-				throw source.error("SYNTAX ERROR");
-			}
-			if (!testNext('{')) {
-				throw source.error("SYNTAX ERROR");
-			}
-			Expression ifTrue = parseExpression();
-			if (!testNext('}')) {
-				throw source.error("SYNTAX ERROR");
-			}
-			if (!testNext(':')) {
-				throw source.error("SYNTAX ERROR");
-			}
-			if (!testNext('{')) {
-				throw source.error("SYNTAX ERROR");
-			}
-			Expression ifFalse = parseExpression();
-			if (!testNext('}')) {
-				throw source.error("SYNTAX ERROR");
-			}
-			return new IfExpression(rule, ifTrue, ifFalse);
+			return parseIfExpression();
+//		} else if (isLetterOrUnderscore(source.getChar())) {
+//			return parseFunctionOrCall();
 		} else {
 			throw source.error("SYNTAX ERROR");
 		}
+	}
+	
+	private Expression parseFunctionOrCall() {
+		return new Constant(1);
+	}
+	
+	private Expression parseBinaryOperation() throws ParserException {
+		Expression left = parseExpression();
+		BinaryOperation op = new BinaryOperation(parseOperation());
+		Expression right = parseExpression();
+		if (!testNext(')')) {
+			throw source.error("SYNTAX ERROR");
+		}
+		return new BinaryExpression(left, right, op);
+	}
+	
+	private Expression parseIfExpression() throws ParserException {
+		Expression rule = parseExpression();
+		if (!testNext(']')) {
+			throw source.error("SYNTAX ERROR");
+		}
+		if (!testNext('?')) {
+			throw source.error("SYNTAX ERROR");
+		}
+		if (!testNext('{')) {
+			throw source.error("SYNTAX ERROR");
+		}
+		Expression ifTrue = parseExpression();
+		if (!testNext('}')) {
+			throw source.error("SYNTAX ERROR");
+		}
+		if (!testNext(':')) {
+			throw source.error("SYNTAX ERROR");
+		}
+		if (!testNext('{')) {
+			throw source.error("SYNTAX ERROR");
+		}
+		Expression ifFalse = parseExpression();
+		if (!testNext('}')) {
+			throw source.error("SYNTAX ERROR");
+		}
+		return new IfExpression(rule, ifTrue, ifFalse);
 	}
 	
 	private String parseOperation() throws ParserException {
@@ -74,8 +87,12 @@ public class Parser {
 		final StringBuilder sb = new StringBuilder();
 		do {
 			sb.append(source.getChar());
-		} while (Character.isLetter(source.nextChar()));
+		} while (isLetterOrUnderscore(source.nextChar()));
 		return sb.toString();
+	}
+	
+	private boolean isLetterOrUnderscore(char c) {
+		return c == '_' || Character.isLetter(c);
 	}
 	
 	private int parseNumber() throws ParserException {
