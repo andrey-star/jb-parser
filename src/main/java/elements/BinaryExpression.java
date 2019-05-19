@@ -1,6 +1,6 @@
-package main.java.element;
+package main.java.elements;
 
-import main.java.EvaluatingException;
+import main.java.exceptions.EvaluatingException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,13 @@ public class BinaryExpression extends Expression {
 	public int evaluate(List<Integer> argValues, Map<String, Function> functions) throws EvaluatingException {
 		List<Integer> leftArgs = generateArguments(argValues, left, required);
 		List<Integer> rightArgs = generateArguments(argValues, right, required);
-		return operation.apply(left.evaluate(leftArgs, functions), right.evaluate(rightArgs, functions));
+		int a = left.evaluate(leftArgs, functions);
+		int b = right.evaluate(rightArgs, functions);
+		try {
+			return operation.apply(a, b);
+		} catch (EvaluatingException e) {
+			throw new EvaluatingException(e.getError(), toString());
+		}
 	}
 	
 	@Override

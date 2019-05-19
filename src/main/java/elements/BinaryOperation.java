@@ -1,11 +1,13 @@
-package main.java.element;
+package main.java.elements;
+
+import main.java.exceptions.EvaluatingException;
 
 import java.util.Map;
 import java.util.function.BinaryOperator;
 
 public class BinaryOperation {
 	
-	private String operation;
+	private final String operation;
 	private static final Map<String, BinaryOperator<Integer>> opIdentifierToOperation = Map.of(
 			"+", Integer::sum,
 			"-", (a, b) -> a - b,
@@ -21,8 +23,12 @@ public class BinaryOperation {
 		this.operation = operation;
 	}
 	
-	public int apply(int a, int b) {
-		return opIdentifierToOperation.get(operation).apply(a, b);
+	int apply(int a, int b) throws EvaluatingException {
+		try {
+			return opIdentifierToOperation.get(operation).apply(a, b);
+		} catch (ArithmeticException e) {
+			throw new EvaluatingException("RUNTIME ERROR");
+		}
 	}
 	
 	@Override

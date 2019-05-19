@@ -1,28 +1,34 @@
-package main.java;
+package main.java.parser;
 
-import main.java.element.*;
+import main.java.elements.*;
+import main.java.exceptions.ParserException;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class Parser {
 	
-	private ParserSource source;
+	private final ParserSource source;
+	private final Set<String> binaryOperators = Set.of("+", "-", "*", "/", ">", "<", "=");
+	private int line = 0;
 	
 	public Parser(ParserSource source) {
 		this.source = source;
 	}
 	
-	public Expression parseValue() throws ParserException {
+	public Expression parseValue(int line) throws ParserException {
+		this.line = line;
 		source.nextChar();
 		Expression result = parseExpression();
-		if (!test(StringParserSource.END)) {
+		if (!test(ParserSource.END)) {
 			throw source.error("SYNTAX ERROR");
 		}
 		return result;
 	}
 	
-	public Function parseFunctionDefinition() throws ParserException {
+	public Function parseFunctionDefinition(int line) throws ParserException {
 		source.nextChar();
 		String name = parseIdentifier();
 		List<String> args = parseParams();
@@ -36,7 +42,7 @@ public class Parser {
 		if (!testNext('}')) {
 			throw source.error("SYNTAX ERROR");
 		}
-		return new Function(name, args, body);
+		return new Function(name, args, body, line);
 	}
 	
 	private Expression parseExpression() throws ParserException {
@@ -45,7 +51,7 @@ public class Parser {
 		} else if (isLetterOrUnderscore(source.getChar())) {
 			String identifier = parseIdentifier();
 			if (test('(')) {
-				return new CallExpression(identifier, parseCallArgs());
+				return new CallExpression(identifier, parseCallArgs(), line);
 			} else {
 				return new Variable(identifier);
 			}
@@ -59,13 +65,7 @@ public class Parser {
 	}
 	
 	private List<String> parseParams() throws ParserException {
-		List<String> strings = parseArgs(() -> {
-			try {
-				return parseIdentifier();
-			} catch (ParserException e) {
-				return null;
-			}
-		});
+		List<String> strings = parseArgs(this::parseIdentifier);
 		if (strings == null) {
 			throw new ParserException("SYNTAX ERROR");
 		} else {
@@ -88,13 +88,13 @@ public class Parser {
 		}
 	}
 	
-	private <T> List<T> parseArgs(Supplier<T> f) throws ParserException {
+	private <T> List<T> parseArgs(Supplier<T> argument) throws ParserException {
 		if (!testNext('(')) {
 			throw source.error("SYNTAX ERROR");
 		}
 		List<T> args = new ArrayList<>();
 		while (true) {
-			args.add(f.get());
+			args.add(argument.get());
 			if (source.testNext(')')) {
 				break;
 			}
@@ -108,7 +108,11 @@ public class Parser {
 	
 	private Expression parseBinaryOperation() throws ParserException {
 		Expression left = parseExpression();
-		BinaryOperation op = new BinaryOperation(parseOperation());
+		String operator = parseOperation();
+		if (!binaryOperators.contains(operator)) {
+			throw source.error("SYNTAX ERROR");
+		}
+		BinaryOperation op = new BinaryOperation(operator);
 		Expression right = parseExpression();
 		if (!testNext(')')) {
 			throw source.error("SYNTAX ERROR");
@@ -144,13 +148,13 @@ public class Parser {
 		return new IfExpression(rule, ifTrue, ifFalse);
 	}
 	
-	private String parseOperation() throws ParserException {
+	private String parseOperation() {
 		String op = "" + source.getChar();
 		source.nextChar();
 		return op;
 	}
 	
-	private String parseIdentifier() throws ParserException {
+	private String parseIdentifier() {
 		StringBuilder sb = new StringBuilder();
 		do {
 			sb.append(source.getChar());
@@ -172,13 +176,13 @@ public class Parser {
 		}
 	}
 	
-	private void readDigits(StringBuilder sb) throws ParserException {
+	private void readDigits(StringBuilder sb) {
 		do {
 			sb.append(source.getChar());
 		} while (Character.isLetterOrDigit(source.nextChar()));
 	}
 	
-	private boolean testNext(char c) throws ParserException {
+	private boolean testNext(char c) {
 		return source.testNext(c);
 	}
 	

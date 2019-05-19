@@ -1,8 +1,5 @@
-package main.java;
+package main.java.exceptions;
 
-/**
- * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
- */
 public class ParserException extends Throwable {
 	
 	public ParserException(String message) {

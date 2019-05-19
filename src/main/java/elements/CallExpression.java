@@ -1,6 +1,6 @@
-package main.java.element;
+package main.java.elements;
 
-import main.java.EvaluatingException;
+import main.java.exceptions.EvaluatingException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,9 @@ public class CallExpression extends Expression {
 	
 	private final String functionName;
 	private final List<Expression> args;
+	private final int line;
 	
-	public CallExpression(String functionName, List<Expression> args) {
+	public CallExpression(String functionName, List<Expression> args, int line) {
 		List<String> res = new ArrayList<>();
 		for (Expression arg : args) {
 			for (String param : arg.required) {
@@ -24,6 +25,7 @@ public class CallExpression extends Expression {
 		this.required = res;
 		this.functionName = functionName;
 		this.args = args;
+		this.line = line;
 	}
 	
 	@Override
@@ -33,9 +35,13 @@ public class CallExpression extends Expression {
 			evaluated.add(expression.evaluate(argValues, functions));
 		}
 		if (functions.containsKey(functionName)) {
+			Function function = functions.get(functionName);
+			if (args.size() != function.getParams().size()) {
+				throw new EvaluatingException("ARGUMENT NUMBER MISMATCH", functionName, line);
+			}
 			return functions.get(functionName).call(evaluated, functions);
 		} else {
-			throw new Error("FUNCTION NOT FOUND: " + functionName);
+			throw new EvaluatingException("FUNCTION NOT FOUND", functionName, line);
 		}
 	}
 	
@@ -51,6 +57,6 @@ public class CallExpression extends Expression {
 	@Override
 	public String toString() {
 		List<String> string = args.stream().map(Expression::toString).collect(Collectors.toList());
-		return functionName + "(" + String.join(",", string) +")";
+		return functionName + "(" + String.join(",", string) + ")";
 	}
 }

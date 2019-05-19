@@ -1,6 +1,6 @@
-package main.java.element;
+package main.java.elements;
 
-import main.java.EvaluatingException;
+import main.java.exceptions.EvaluatingException;
 
 import java.util.*;
 
