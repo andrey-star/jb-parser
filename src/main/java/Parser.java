@@ -1,42 +1,109 @@
 package main.java;
 
 import main.java.element.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 public class Parser {
 	
-	private final ParserSource source;
+	private ParserSource source;
 	
 	public Parser(ParserSource source) {
 		this.source = source;
 	}
 	
-	public Expression parse() throws ParserException {
+	public Expression parseValue() throws ParserException {
 		source.nextChar();
 		Expression result = parseExpression();
-		if(!test(StringParserSource.END)) {
+		if (!test(StringParserSource.END)) {
 			throw source.error("SYNTAX ERROR");
 		}
 		return result;
 	}
 	
+	public Function parseFunctionDefinition() throws ParserException {
+		source.nextChar();
+		String name = parseIdentifier();
+		List<String> args = parseParams();
+		if (!testNext('=')) {
+			throw source.error("SYNTAX ERROR");
+		}
+		if (!testNext('{')) {
+			throw source.error("SYNTAX ERROR");
+		}
+		Expression body = parseExpression();
+		if (!testNext('}')) {
+			throw source.error("SYNTAX ERROR");
+		}
+		return new Function(name, args, body);
+	}
+	
 	private Expression parseExpression() throws ParserException {
 		if (Character.isDigit(source.getChar()) || test('-')) {
 			return new Constant(parseNumber());
-		} else if (Character.isLetter(source.getChar())) {
-			return new Variable(parseIdentifier());
+		} else if (isLetterOrUnderscore(source.getChar())) {
+			String identifier = parseIdentifier();
+			if (test('(')) {
+				return new CallExpression(identifier, parseCallArgs());
+			} else {
+				return new Variable(identifier);
+			}
 		} else if (testNext('(')) {
 			return parseBinaryOperation();
 		} else if (testNext('[')) {
 			return parseIfExpression();
-//		} else if (isLetterOrUnderscore(source.getChar())) {
-//			return parseFunctionOrCall();
 		} else {
 			throw source.error("SYNTAX ERROR");
 		}
 	}
 	
-	private Expression parseFunctionOrCall() {
-		return new Constant(1);
+	private List<String> parseParams() throws ParserException {
+		List<String> strings = parseArgs(() -> {
+			try {
+				return parseIdentifier();
+			} catch (ParserException e) {
+				return null;
+			}
+		});
+		if (strings == null) {
+			throw new ParserException("SYNTAX ERROR");
+		} else {
+			return strings;
+		}
+	}
+	
+	private List<Expression> parseCallArgs() throws ParserException {
+		List<Expression> strings = parseArgs(() -> {
+			try {
+				return parseExpression();
+			} catch (ParserException e) {
+				return null;
+			}
+		});
+		if (strings == null) {
+			throw new ParserException("SYNTAX ERROR");
+		} else {
+			return strings;
+		}
+	}
+	
+	private <T> List<T> parseArgs(Supplier<T> f) throws ParserException {
+		if (!testNext('(')) {
+			throw source.error("SYNTAX ERROR");
+		}
+		List<T> args = new ArrayList<>();
+		while (true) {
+			args.add(f.get());
+			if (source.testNext(')')) {
+				break;
+			}
+			if (source.testNext(',')) {
+				continue;
+			}
+			throw source.error("SYNTAX ERROR");
+		}
+		return args;
 	}
 	
 	private Expression parseBinaryOperation() throws ParserException {
@@ -84,7 +151,7 @@ public class Parser {
 	}
 	
 	private String parseIdentifier() throws ParserException {
-		final StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		do {
 			sb.append(source.getChar());
 		} while (isLetterOrUnderscore(source.nextChar()));
@@ -96,32 +163,27 @@ public class Parser {
 	}
 	
 	private int parseNumber() throws ParserException {
-		final StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		readDigits(sb);
 		try {
 			return Integer.parseInt(sb.toString());
-		} catch (final NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			throw source.error("SYNTAX ERROR");
 		}
 	}
 	
-	private void readDigits(final StringBuilder sb) throws ParserException {
+	private void readDigits(StringBuilder sb) throws ParserException {
 		do {
 			sb.append(source.getChar());
 		} while (Character.isLetterOrDigit(source.nextChar()));
 	}
 	
-	private boolean testNext(final char c) throws ParserException {
-		if (source.getChar() == c) {
-			source.nextChar();
-			return true;
-		} else {
-			return false;
-		}
+	private boolean testNext(char c) throws ParserException {
+		return source.testNext(c);
 	}
 	
-	private boolean test(final char c) {
-		return source.getChar() == c;
+	private boolean test(char c) {
+		return source.test(c);
 	}
 	
 }

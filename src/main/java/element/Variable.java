@@ -2,14 +2,14 @@ package main.java.element;
 
 import main.java.EvaluatingException;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Variable extends Expression {
 	
 	private final String name;
 	
 	public Variable(String name) {
+		this.required = List.of(name);
 		this.name = name;
 	}
 	
@@ -28,9 +28,9 @@ public class Variable extends Expression {
 	}
 	
 	@Override
-	public int evaluate(Map<String, Integer> args) throws EvaluatingException {
-		if (args.containsKey(name)) {
-			return args.get(name);
+	public int evaluate(List<Integer> args, Map<String, Function> functions) throws EvaluatingException {
+		if (args.size() == 1) {
+			return args.get(0);
 		}
 		throw new EvaluatingException("PARAMETER NOT FOUND", name);
 	}

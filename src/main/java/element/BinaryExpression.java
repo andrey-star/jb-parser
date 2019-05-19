@@ -2,6 +2,8 @@ package main.java.element;
 
 import main.java.EvaluatingException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class BinaryExpression extends Expression {
@@ -9,14 +11,28 @@ public class BinaryExpression extends Expression {
 	private final BinaryOperation operation;
 	
 	public BinaryExpression(Expression left, Expression right, BinaryOperation operation) {
+		List<String> res = new ArrayList<>();
+		for (String param : left.required) {
+			if (!res.contains(param)) {
+				res.add(param);
+			}
+		}
+		for (String param : right.required) {
+			if (!res.contains(param)) {
+				res.add(param);
+			}
+		}
+		this.required = res;
 		this.left = left;
 		this.right = right;
 		this.operation = operation;
 	}
 	
 	@Override
-	public int evaluate(Map<String, Integer> args) throws EvaluatingException {
-		return operation.apply(left.evaluate(args), right.evaluate(args));
+	public int evaluate(List<Integer> argValues, Map<String, Function> functions) throws EvaluatingException {
+		List<Integer> leftArgs = generateArguments(argValues, left, required);
+		List<Integer> rightArgs = generateArguments(argValues, right, required);
+		return operation.apply(left.evaluate(leftArgs, functions), right.evaluate(rightArgs, functions));
 	}
 	
 	@Override

@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface Evaluatable {
 	
-	int evaluate(Map<String, Integer> args) throws EvaluatingException;
+	int evaluate(List<Integer> argValues, Map<String, Function> functions) throws EvaluatingException;
 	
 }

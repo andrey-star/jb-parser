@@ -11,36 +11,42 @@ public abstract class ParserSource {
     public static char END = '\0';
 
     protected int pos;
-    protected int line = 1;
-    protected int posInLine;
     private char c;
 
     protected abstract char readChar() throws IOException;
-
+    
     public char getChar() {
         return c;
     }
 
     public char nextChar() throws ParserException {
         try {
-            if (c == '\n') {
-                line++;
-                posInLine = 0;
-            }
             c = readChar();
             pos++;
-            posInLine++;
             return c;
         } catch (final IOException e) {
             throw error("Source read error", e.getMessage());
         }
     }
-
+    
+    public boolean test(final char c) {
+        return getChar() == c;
+    }
+    
+    public boolean testNext(final char c) throws ParserException {
+        if (getChar() == c) {
+            nextChar();
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     public ParserException error(String error, String expression) {
-        return new ParserException(line, posInLine, String.format("%s %d:%s", error, line, expression));
+        return new ParserException(String.format("%s: %s", error, expression));
     }
     
     public ParserException error(String error) {
-        return new ParserException(line, posInLine, error);
+        return new ParserException(error);
     }
 }
