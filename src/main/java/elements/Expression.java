@@ -1,7 +1,5 @@
 package main.java.elements;
 
-import java.util.List;
-
 public abstract class Expression implements Evaluatable {
 	
 	@Override

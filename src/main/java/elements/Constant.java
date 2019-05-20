@@ -1,7 +1,5 @@
 package main.java.elements;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 public class Constant extends Expression {

@@ -33,7 +33,7 @@ abstract class ParserSource {
 		}
 	}
 	
-	ParserException error(String error) {
-		return new ParserException(error);
+	ParserException error() {
+		return new ParserException("SYNTAX ERROR");
 	}
 }

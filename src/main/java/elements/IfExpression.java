@@ -2,8 +2,6 @@ package main.java.elements;
 
 import main.java.exceptions.EvaluatingException;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class IfExpression extends Expression {

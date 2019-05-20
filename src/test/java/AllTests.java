@@ -31,7 +31,7 @@ public class AllTests {
 	}
 	
 	@Test
-	public void testBinaryExpreEssion() throws ParserException, EvaluatingException {
+	public void testBinaryExpression() throws ParserException, EvaluatingException {
 		testParseEval("(1+3)", 4);
 		testParseEval("(1/3)", 0);
 		testParseEval("(45674>4545)", 1);

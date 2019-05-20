@@ -23,7 +23,7 @@ public class Parser {
 		source.nextChar();
 		Expression result = parseExpression();
 		if (!test(ParserSource.END)) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		return result;
 	}
@@ -33,14 +33,14 @@ public class Parser {
 		String name = parseIdentifier();
 		List<String> args = parseParams();
 		if (!testNext('=')) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		if (!testNext('{')) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		Expression body = parseExpression();
 		if (!testNext('}')) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		return new Function(name, args, body, line);
 	}
@@ -60,7 +60,7 @@ public class Parser {
 		} else if (testNext('[')) {
 			return parseIfExpression();
 		} else {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 	}
 	
@@ -90,7 +90,7 @@ public class Parser {
 	
 	private <T> List<T> parseArgs(Supplier<T> argument) throws ParserException {
 		if (!testNext('(')) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		List<T> args = new ArrayList<>();
 		while (true) {
@@ -101,7 +101,7 @@ public class Parser {
 			if (source.testNext(',')) {
 				continue;
 			}
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		return args;
 	}
@@ -110,12 +110,12 @@ public class Parser {
 		Expression left = parseExpression();
 		String operator = parseOperation();
 		if (!binaryOperators.contains(operator)) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		BinaryOperation op = new BinaryOperation(operator);
 		Expression right = parseExpression();
 		if (!testNext(')')) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		return new BinaryExpression(left, right, op);
 	}
@@ -123,27 +123,27 @@ public class Parser {
 	private Expression parseIfExpression() throws ParserException {
 		Expression rule = parseExpression();
 		if (!testNext(']')) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		if (!testNext('?')) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		if (!testNext('{')) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		Expression ifTrue = parseExpression();
 		if (!testNext('}')) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		if (!testNext(':')) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		if (!testNext('{')) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		Expression ifFalse = parseExpression();
 		if (!testNext('}')) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 		return new IfExpression(rule, ifTrue, ifFalse);
 	}
@@ -172,7 +172,7 @@ public class Parser {
 		try {
 			return Integer.parseInt(sb.toString());
 		} catch (NumberFormatException e) {
-			throw source.error("SYNTAX ERROR");
+			throw source.error();
 		}
 	}
 	
