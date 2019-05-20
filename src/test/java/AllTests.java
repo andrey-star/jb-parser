@@ -28,6 +28,7 @@ public class AllTests {
 	public void testIdentifier() throws ParserException {
 		testParseValue("x");
 		testParseValue("xy__fD_hss");
+		assertEvalError("PARAMETER NOT FOUND b___G:1", "b___G");
 		assertEvalError("PARAMETER NOT FOUND GH_FF:1", "GH_FF");
 		assertEvalError("PARAMETER NOT FOUND x:1", "f(y)={x}", "f(1)");
 		assertEvalError("PARAMETER NOT FOUND z:2", "g(y)={x}", "f(y)={g(z)}", "f(1)");
