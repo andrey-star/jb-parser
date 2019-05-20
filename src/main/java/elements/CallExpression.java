@@ -1,6 +1,8 @@
 package main.java.elements;
 
+import main.java.exceptions.ArgumentNumberMismatchException;
 import main.java.exceptions.EvaluatingException;
+import main.java.exceptions.FunctionNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +28,11 @@ public class CallExpression extends Expression {
 			evaluated.add(expression.evaluate(scope, functions));
 		}
 		if (!functions.containsKey(functionName)) {
-			throw new EvaluatingException("FUNCTION NOT FOUND", functionName, line);
+			throw new FunctionNotFoundException(functionName, line);
 		}
 		Function function = functions.get(functionName);
 		if (args.size() != function.getParams().size()) {
-			throw new EvaluatingException("ARGUMENT NUMBER MISMATCH", functionName, line);
+			throw new ArgumentNumberMismatchException(functionName, line);
 		}
 		return functions.get(functionName).call(evaluated, functions);
 	}

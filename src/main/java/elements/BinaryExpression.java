@@ -1,17 +1,20 @@
 package main.java.elements;
 
 import main.java.exceptions.EvaluatingException;
+import main.java.exceptions.RuntimeException;
 
 import java.util.Map;
 
 public class BinaryExpression extends Expression {
 	private final Expression left, right;
 	private final BinaryOperation operation;
+	private final int line;
 	
-	public BinaryExpression(Expression left, Expression right, BinaryOperation operation) {
+	public BinaryExpression(Expression left, Expression right, BinaryOperation operation, int line) {
 		this.left = left;
 		this.right = right;
 		this.operation = operation;
+		this.line = line;
 	}
 	
 	@Override
@@ -20,8 +23,8 @@ public class BinaryExpression extends Expression {
 		int b = right.evaluate(scope, functions);
 		try {
 			return operation.apply(a, b);
-		} catch (EvaluatingException e) {
-			throw new EvaluatingException(e.getError(), toString());
+		} catch (ArithmeticException e) {
+			throw new RuntimeException(toString(), line);
 		}
 	}
 	

@@ -1,15 +1,17 @@
 package main.java.elements;
 
-import main.java.exceptions.EvaluatingException;
+import main.java.exceptions.ParameterNotFoundException;
 
-import java.util.*;
+import java.util.Map;
 
 public class Variable extends Expression {
 	
 	private final String name;
+	private final int line;
 	
-	public Variable(String name) {
+	public Variable(String name, int line) {
 		this.name = name;
+		this.line = line;
 	}
 	
 	@Override
@@ -27,10 +29,10 @@ public class Variable extends Expression {
 	}
 	
 	@Override
-	public int evaluate(Map<String, Integer> scope, Map<String, Function> functions) throws EvaluatingException {
+	public int evaluate(Map<String, Integer> scope, Map<String, Function> functions) throws ParameterNotFoundException {
 		if (scope.containsKey(name)) {
 			return scope.get(name);
 		}
-		throw new EvaluatingException("PARAMETER NOT FOUND", name);
+		throw new ParameterNotFoundException(name, line);
 	}
 }

@@ -2,10 +2,12 @@ package main.java.elements;
 
 import main.java.exceptions.EvaluatingException;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Function {
-
+	
 	private final String name;
 	private final List<String> params;
 	private final Expression body;
@@ -26,12 +28,7 @@ public class Function {
 		if (scope.size() != params.size()) {
 			throw new EvaluatingException("DUPLICATE ARGUMENTS FOUND", name, line);
 		}
-		try {
-			return body.evaluate(scope, functions);
-		} catch (EvaluatingException e) {
-			throw new EvaluatingException(e.getError(), e.getName(), line);
-		}
-		
+		return body.evaluate(scope, functions);
 	}
 	
 	public String getName() {
@@ -40,10 +37,6 @@ public class Function {
 	
 	List<String> getParams() {
 		return params;
-	}
-	
-	public Expression getBody() {
-		return body;
 	}
 	
 	@Override

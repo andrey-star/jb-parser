@@ -2,11 +2,11 @@ package main.java.parser;
 
 import main.java.elements.*;
 import main.java.exceptions.ParserException;
+import main.java.util.ParserSupplier;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Supplier;
 
 public class Parser {
 	
@@ -29,6 +29,7 @@ public class Parser {
 	}
 	
 	public Function parseFunctionDefinition(int line) throws ParserException {
+		this.line = line;
 		source.nextChar();
 		String name = parseIdentifier();
 		List<String> args = parseParams();
@@ -53,7 +54,7 @@ public class Parser {
 			if (test('(')) {
 				return new CallExpression(identifier, parseCallArgs(), line);
 			} else {
-				return new Variable(identifier);
+				return new Variable(identifier, line);
 			}
 		} else if (testNext('(')) {
 			return parseBinaryOperation();
@@ -65,30 +66,14 @@ public class Parser {
 	}
 	
 	private List<String> parseParams() throws ParserException {
-		List<String> strings = parseArgs(this::parseIdentifier);
-		if (strings == null) {
-			throw new ParserException("SYNTAX ERROR");
-		} else {
-			return strings;
-		}
+		return parseArgs(this::parseIdentifier);
 	}
 	
 	private List<Expression> parseCallArgs() throws ParserException {
-		List<Expression> strings = parseArgs(() -> {
-			try {
-				return parseExpression();
-			} catch (ParserException e) {
-				return null;
-			}
-		});
-		if (strings == null) {
-			throw new ParserException("SYNTAX ERROR");
-		} else {
-			return strings;
-		}
+		return parseArgs(this::parseExpression);
 	}
 	
-	private <T> List<T> parseArgs(Supplier<T> argument) throws ParserException {
+	private <T> List<T> parseArgs(ParserSupplier<T> argument) throws ParserException {
 		if (!testNext('(')) {
 			throw source.error();
 		}
@@ -117,7 +102,7 @@ public class Parser {
 		if (!testNext(')')) {
 			throw source.error();
 		}
-		return new BinaryExpression(left, right, op);
+		return new BinaryExpression(left, right, op, line);
 	}
 	
 	private Expression parseIfExpression() throws ParserException {
@@ -154,7 +139,10 @@ public class Parser {
 		return op;
 	}
 	
-	private String parseIdentifier() {
+	private String parseIdentifier() throws ParserException {
+		if (!isLetterOrUnderscore(source.getChar())) {
+			throw source.error();
+		}
 		StringBuilder sb = new StringBuilder();
 		do {
 			sb.append(source.getChar());
