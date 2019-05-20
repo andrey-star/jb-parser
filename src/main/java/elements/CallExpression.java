@@ -9,12 +9,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * The {@code CallExpression} calss represents a call to a function,
+ * with the given arguments.
+ */
 public class CallExpression extends Expression {
 	
 	private final String functionName;
 	private final List<Expression> args;
 	private final int line;
 	
+	/**
+	 * Constructs a {@code CallExpression} class with the given function and arguments.
+	 * @param functionName the name of function to be called
+	 * @param args the arguments to be passed to the function
+	 * @param line is the line, at which the function takes place
+	 */
 	public CallExpression(String functionName, List<Expression> args, int line) {
 		this.functionName = functionName;
 		this.args = args;

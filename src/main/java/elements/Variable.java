@@ -4,6 +4,9 @@ import main.java.exceptions.ParameterNotFoundException;
 
 import java.util.Map;
 
+/**
+ * The {@code Variable} class represents a variable, defined by its identifier.
+ */
 public class Variable extends Expression {
 	
 	private final String name;

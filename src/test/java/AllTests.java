@@ -65,6 +65,7 @@ public class AllTests {
 		testParseEval(1, "[((7+8)=(8+7))]?{1}:{0}");
 		testParseEval(0, "[((7+8)>(8+7))]?{1}:{0}");
 		testParseEval(12, "[12]?{12}:{0}");
+		testParseEval(3628800, "f(n)={[(n=0)]?{1}:{(f((n-1))*n)}}", "f(10)");
 		testParseEval(-1, "f(f)={(f+1)}", "g(g)={(g-f(g))}",
 				"z(x)={[f(x)]?{(f(x)+2)}:{g(x)}}", "z(((2/2)-2))");
 		testParseEval(-1, "___f___(f)={(f+1)}", "___g___(g)={(g-___f___(g))}",
@@ -84,6 +85,7 @@ public class AllTests {
 	@Test
 	public void testFunctionDefinition() throws ParserException {
 		testParseFunction("f(x,y)={(g(x)+h(y))}");
+		testParseFunction("f()={(1+2)}");
 		testParseFunction("f(x,y,z)={((g(x)+x)+h(z))}");
 		assertEvalError("DUPLICATE ARGUMENTS FOUND f:1", "f(x,x)={x}", "f(1,2)");
 		assertEvalError("PARAMETER NOT FOUND z:1", "f(x,y)={z}", "f(1,2)");
@@ -109,6 +111,7 @@ public class AllTests {
 		testParseEval(13, "f(x,y)={(g(x)+h(y))}", "g(k)={h(((k+2)*3))}", "h(r)={(r-1)}", "f(2,3)");
 		testParseEval(13, "f(x,y)={(g(x)+h(y))}", "g(k)={h(((k+2)*3))}", "h(r)={(r-1)}", "f(2,3)");
 		testParseEval(13, "f(x,y)={(g(x)+h(y))}", "g(k)={h(((k+2)*3))}", "h(r)={(r-1)}", "f(2,3)");
+		testParseEval(3, "f()={(1+2)}","f()");
 		assertEvalError("FUNCTION NOT FOUND k:4", "f(x,y)={(g(x)+h(y))}", "g(k)={h(((k+2)*3))}", "h(r)={(r-1)}", "k(2,3)");
 		assertEvalError("ARGUMENT NUMBER MISMATCH g:2", "g(k,y)={h(((k+2)*3))}", "g(2)");
 		assertEvalError("ARGUMENT NUMBER MISMATCH h:2", "h(x,y,z)={x}", "g(k)={h(((k+2)*3))}", "g(2)");

@@ -8,16 +8,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * The {@code Parser } class represents a utility, used for parsing
+ * function definitions and expressions.
+ */
 public class Parser {
 	
 	private final ParserSource source;
 	private final Set<String> binaryOperators = Set.of("+", "-", "*", "/", ">", "<", "=");
 	private int line = 0;
 	
+	/**
+	 * Contsructs a {@code Parser} object using the specified source
+	 * @param source a source, containing the parsing information
+	 */
 	public Parser(ParserSource source) {
 		this.source = source;
 	}
 	
+	/**
+	 * Parses an expression from the parser's source
+	 *
+	 * @param line is the line, at which the expression takes place
+	 * @return an {@code Expression} object, representing the parsed expression
+	 * @throws ParserException if the expression is malformed
+	 */
 	public Expression parseValue(int line) throws ParserException {
 		this.line = line;
 		source.nextChar();
@@ -28,6 +43,13 @@ public class Parser {
 		return result;
 	}
 	
+	/**
+	 * Parses a function from the parser's source
+	 *
+	 * @param line is the line, at which the function takes place
+	 * @return an {@code Function} object, representing the parsed function
+	 * @throws ParserException if the function definition is malformed
+	 */
 	public Function parseFunctionDefinition(int line) throws ParserException {
 		this.line = line;
 		source.nextChar();
@@ -76,6 +98,9 @@ public class Parser {
 		}
 		List<T> args = new ArrayList<>();
 		while (true) {
+			if (source.testNext(')')) {
+				break;
+			}
 			args.add(argument.get());
 			if (source.testNext(')')) {
 				break;

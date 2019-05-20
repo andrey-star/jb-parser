@@ -5,11 +5,21 @@ import main.java.exceptions.RuntimeException;
 
 import java.util.Map;
 
+/**
+ * The {@code BinaryExpression} class represents a binary expression.
+ */
 public class BinaryExpression extends Expression {
 	private final Expression left, right;
 	private final BinaryOperation operation;
 	private final int line;
 	
+	/**
+	 * Constructs an {@code IfExpression} object, using the given arguments
+	 * @param left the left side of th binary expression
+	 * @param right the right side of th binary expression
+	 * @param operation the operation of the binary expression
+	 * @param line is the line, at which the expression takes place
+	 */
 	public BinaryExpression(Expression left, Expression right, BinaryOperation operation, int line) {
 		this.left = left;
 		this.right = right;
