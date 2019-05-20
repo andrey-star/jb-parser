@@ -19,13 +19,15 @@ public class Function {
 	}
 	
 	int call(List<Integer> argValues, Map<String, Function> functions) throws EvaluatingException {
-		Set<String> arguments = new HashSet<>(params);
-		if (arguments.size() != params.size()) {
-			throw new EvaluatingException("DUPLICATE ARGUMENTS FOUND", name);
+		Map<String, Integer> scope = new HashMap<>();
+		for (int i = 0; i < argValues.size(); i++) {
+			scope.put(params.get(i), argValues.get(i));
+		}
+		if (scope.size() != params.size()) {
+			throw new EvaluatingException("DUPLICATE ARGUMENTS FOUND", name, line);
 		}
 		try {
-			List<Integer> expArgs = Expression.generateArguments(argValues, body, params);
-			return body.evaluate(expArgs, functions);
+			return body.evaluate(scope, functions);
 		} catch (EvaluatingException e) {
 			throw new EvaluatingException(e.getError(), e.getName(), line);
 		}

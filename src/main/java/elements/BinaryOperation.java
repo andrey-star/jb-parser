@@ -18,7 +18,6 @@ public class BinaryOperation {
 			"=", (a, b) -> (a.equals(b) ? 1 : 0)
 	);
 	
-	
 	public BinaryOperation(String operation) {
 		this.operation = operation;
 	}

@@ -14,35 +14,25 @@ public class CallExpression extends Expression {
 	private final int line;
 	
 	public CallExpression(String functionName, List<Expression> args, int line) {
-		List<String> res = new ArrayList<>();
-		for (Expression arg : args) {
-			for (String param : arg.required) {
-				if (!res.contains(param)) {
-					res.add(param);
-				}
-			}
-		}
-		this.required = res;
 		this.functionName = functionName;
 		this.args = args;
 		this.line = line;
 	}
 	
 	@Override
-	public int evaluate(List<Integer> argValues, Map<String, Function> functions) throws EvaluatingException {
+	public int evaluate(Map<String, Integer> scope, Map<String, Function> functions) throws EvaluatingException {
 		List<Integer> evaluated = new ArrayList<>();
 		for (Expression expression : args) {
-			evaluated.add(expression.evaluate(argValues, functions));
+			evaluated.add(expression.evaluate(scope, functions));
 		}
-		if (functions.containsKey(functionName)) {
-			Function function = functions.get(functionName);
-			if (args.size() != function.getParams().size()) {
-				throw new EvaluatingException("ARGUMENT NUMBER MISMATCH", functionName, line);
-			}
-			return functions.get(functionName).call(evaluated, functions);
-		} else {
+		if (!functions.containsKey(functionName)) {
 			throw new EvaluatingException("FUNCTION NOT FOUND", functionName, line);
 		}
+		Function function = functions.get(functionName);
+		if (args.size() != function.getParams().size()) {
+			throw new EvaluatingException("ARGUMENT NUMBER MISMATCH", functionName, line);
+		}
+		return functions.get(functionName).call(evaluated, functions);
 	}
 	
 	@Override

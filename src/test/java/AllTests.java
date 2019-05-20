@@ -8,7 +8,6 @@ import main.java.parser.StringParserSource;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class AllTests {
 	}
 	
 	@Test
-	public void testBinaryExpression() throws ParserException, EvaluatingException {
+	public void testBinaryExpreEssion() throws ParserException, EvaluatingException {
 		testParseEval("(1+3)", 4);
 		testParseEval("(1/3)", 0);
 		testParseEval("(45674>4545)", 1);
@@ -89,7 +88,7 @@ public class AllTests {
 		Map<String, Function> functions = parseFunctions(input);
 		Expression exp = testParseValue(input.get(input.size() - 1), input.size() - 1);
 		try {
-			exp.evaluate(new ArrayList<>(), functions);
+			exp.evaluate(new HashMap<>(), functions);
 			Assert.fail(input.toString());
 		} catch (Exception e) {
 			System.err.println("Input: " + input);
@@ -106,7 +105,7 @@ public class AllTests {
 		var functions = parseFunctions(input);
 		Expression exp = testParseValue(input.get(input.size() - 1));
 		try {
-			int res = exp.evaluate(new ArrayList<>(), functions);
+			int res = exp.evaluate(new HashMap<>(), functions);
 			Assert.assertEquals(res, evalResult);
 		} catch (EvaluatingException e) {
 			System.err.format("Error while evaluating '%s'%n", input);

@@ -9,7 +9,6 @@ public class Variable extends Expression {
 	private final String name;
 	
 	public Variable(String name) {
-		this.required = List.of(name);
 		this.name = name;
 	}
 	
@@ -28,9 +27,9 @@ public class Variable extends Expression {
 	}
 	
 	@Override
-	public int evaluate(List<Integer> args, Map<String, Function> functions) throws EvaluatingException {
-		if (args.size() == 1) {
-			return args.get(0);
+	public int evaluate(Map<String, Integer> scope, Map<String, Function> functions) throws EvaluatingException {
+		if (scope.containsKey(name)) {
+			return scope.get(name);
 		}
 		throw new EvaluatingException("PARAMETER NOT FOUND", name);
 	}
