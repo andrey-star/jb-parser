@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * The {@code CallExpression} calss represents a call to a function,
+ * The {@code CallExpression} class represents a call to a function,
  * with the given arguments.
  */
 public class CallExpression extends Expression {

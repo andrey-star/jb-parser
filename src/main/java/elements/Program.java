@@ -26,8 +26,8 @@ public class Program {
 	
 	/**
 	 * Constructs a Program from a list of function definitions
-	 * and an expression at the last place
-	 * @param lines a list of function definitons and an expression
+	 * and an expression at the last place.
+	 * @param lines a list of function definitions and an expression
 	 * @throws ParserException if the function definitions and/or the expression are malformed
 	 */
 	public Program(List<String> lines) throws ParserException {

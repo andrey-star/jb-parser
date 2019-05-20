@@ -19,7 +19,7 @@ public class Parser {
 	private int line = 0;
 	
 	/**
-	 * Contsructs a {@code Parser} object using the specified source
+	 * Constructs a {@code Parser} object using the specified source
 	 * @param source a source, containing the parsing information
 	 */
 	public Parser(ParserSource source) {

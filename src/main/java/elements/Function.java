@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * The {@code Function} class represents a function definition,
- * definde by the name of th function, the parameter names, and
+ * defined by the name of th function, the parameter names, and
  * an {@code Expression} representing the body of the function.
  */
 public class Function {
