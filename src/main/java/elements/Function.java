@@ -1,5 +1,6 @@
 package main.java.elements;
 
+import main.java.exceptions.DuplicateArgumentsException;
 import main.java.exceptions.EvaluatingException;
 
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class Function {
 			scope.put(params.get(i), argValues.get(i));
 		}
 		if (scope.size() != params.size()) {
-			throw new EvaluatingException("DUPLICATE ARGUMENTS FOUND", name, line);
+			throw new DuplicateArgumentsException(name, line);
 		}
 		return body.evaluate(scope, functions);
 	}

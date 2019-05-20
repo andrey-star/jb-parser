@@ -33,10 +33,7 @@ public class Parser {
 		source.nextChar();
 		String name = parseIdentifier();
 		List<String> args = parseParams();
-		if (!testNext('=')) {
-			throw source.error();
-		}
-		if (!testNext('{')) {
+		if (doesntMatch("={")) {
 			throw source.error();
 		}
 		Expression body = parseExpression();
@@ -107,23 +104,11 @@ public class Parser {
 	
 	private Expression parseIfExpression() throws ParserException {
 		Expression rule = parseExpression();
-		if (!testNext(']')) {
-			throw source.error();
-		}
-		if (!testNext('?')) {
-			throw source.error();
-		}
-		if (!testNext('{')) {
+		if (doesntMatch("]?{")) {
 			throw source.error();
 		}
 		Expression ifTrue = parseExpression();
-		if (!testNext('}')) {
-			throw source.error();
-		}
-		if (!testNext(':')) {
-			throw source.error();
-		}
-		if (!testNext('{')) {
+		if (doesntMatch("}:{")) {
 			throw source.error();
 		}
 		Expression ifFalse = parseExpression();
@@ -134,7 +119,7 @@ public class Parser {
 	}
 	
 	private String parseOperation() {
-		String op = "" + source.getChar();
+		String op = Character.toString(source.getChar());
 		source.nextChar();
 		return op;
 	}
@@ -172,6 +157,15 @@ public class Parser {
 	
 	private boolean testNext(char c) {
 		return source.testNext(c);
+	}
+	
+	private boolean doesntMatch(String s) {
+		for (int i = 0; i < s.length(); i++) {
+			if (!testNext(s.charAt(i))) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private boolean test(char c) {
