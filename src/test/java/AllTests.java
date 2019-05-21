@@ -2,15 +2,16 @@ package test.java;
 
 import main.java.elements.Expression;
 import main.java.elements.Function;
+import main.java.elements.Program;
 import main.java.exceptions.EvaluatingException;
 import main.java.exceptions.ParserException;
 import main.java.parser.Parser;
-import main.java.parser.StringParserSource;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AllTests {
@@ -126,20 +127,10 @@ public class AllTests {
 		
 	}
 	
-	private Map<String, Function> parseFunctions(String... input) throws ParserException {
-		Map<String, Function> functions = new HashMap<>();
-		for (int i = 0; i < input.length - 1; i++) {
-			Function f = testParseFunction(input[i], i);
-			functions.put(f.getName(), f);
-		}
-		return functions;
-	}
-	
 	private void testParseEval(int evalResult, String... input) throws ParserException, EvaluatingException {
-		var functions = parseFunctions(input);
-		Expression exp = testParseValue(input[input.length - 1]);
+		Program program = parseProgram(input);
 		try {
-			int res = exp.evaluate(new HashMap<>(), functions);
+			int res = program.run();
 			Assert.assertEquals(evalResult, res);
 		} catch (EvaluatingException e) {
 			System.err.format("Error while evaluating '%s'%n", Arrays.toString(input));
@@ -148,10 +139,9 @@ public class AllTests {
 	}
 	
 	private void assertEvalError(String error, String... input) throws ParserException {
-		Map<String, Function> functions = parseFunctions(input);
-		Expression exp = testParseValue(input[input.length - 1], input.length - 1);
+		Program program = parseProgram(input);
 		try {
-			exp.evaluate(new HashMap<>(), functions);
+			program.run();
 			Assert.fail(Arrays.toString(input));
 		} catch (Exception e) {
 			System.err.println("Input: " + Arrays.toString(input));
@@ -162,7 +152,7 @@ public class AllTests {
 	
 	private void assertParseFunctionError(String input) {
 		try {
-			parseFunction(input, 0);
+			parseFunction(input);
 			Assert.fail(input);
 		} catch (ParserException e) {
 			System.err.println("Input: " + input);
@@ -173,7 +163,7 @@ public class AllTests {
 	
 	private void assertParseValueError(String input) {
 		try {
-			parseValue(input, 0);
+			parseValue(input);
 			Assert.fail(input);
 		} catch (ParserException e) {
 			System.err.println("Input: " + input);
@@ -182,13 +172,9 @@ public class AllTests {
 		}
 	}
 	
-	private Expression testParseValue(String input) throws ParserException {
-		return testParseValue(input, 0);
-	}
-	
-	private Expression testParseValue(String input, int line) throws ParserException {
+	private void testParseValue(String input) throws ParserException {
 		try {
-			return parseValue(input, line);
+			Assert.assertEquals(input, input, parseValue(input).toString());
 		} catch (ParserException e) {
 			System.err.format("Error while parsing '%s'%n", input);
 			throw e;
@@ -196,26 +182,29 @@ public class AllTests {
 	}
 	
 	private void testParseFunction(String input) throws ParserException {
-		testParseFunction(input, 0);
-	}
-	
-	private Function testParseFunction(String input, int line) throws ParserException {
 		try {
-			Function res = parseFunction(input, line);
-			Assert.assertEquals(input, input, res.toString());
-			return res;
+			Assert.assertEquals(input, input, parseFunction(input).toString());
 		} catch (ParserException e) {
 			System.err.format("Error while parsing '%s'%n", input);
 			throw e;
 		}
 	}
 	
-	private Expression parseValue(String input, int line) throws ParserException {
-		return new Parser(new StringParserSource(input)).parseValue(line);
+	private Expression parseValue(String expression) throws ParserException {
+		return parseProgram(expression).getInit();
+	}
+
+	private Function parseFunction(String function) throws ParserException {
+		Map<String, Function> functions = parseProgram(function, "0").getFunctions();
+		List<Function> functionDefs = new ArrayList<>(functions.values());
+		if (functionDefs.size() != 1) {
+			throw new AssertionError();
+		}
+		return functionDefs.get(0);
 	}
 	
-	private Function parseFunction(String input, int line) throws ParserException {
-		return new Parser(new StringParserSource(input)).parseFunctionDefinition(line);
+	private Program parseProgram(String... lines) throws ParserException {
+		return new Parser().parseProgram(Arrays.asList(lines));
 	}
 	
 	

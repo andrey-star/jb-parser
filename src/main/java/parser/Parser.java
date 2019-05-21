@@ -5,6 +5,7 @@ import main.java.exceptions.ParserException;
 import main.java.util.ParserSupplier;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BinaryOperator;
@@ -15,7 +16,7 @@ import java.util.function.BinaryOperator;
  */
 public class Parser {
 	
-	private final ParserSource source;
+	private ParserSource source;
 	private final Map<String, BinaryOperator<Integer>> BINARY_OPERATIONS = Map.of(
 			"+", Integer::sum,
 			"-", (a, b) -> a - b,
@@ -28,25 +29,25 @@ public class Parser {
 	);
 	private int line = 0;
 	
-	/**
-	 * Constructs a {@code Parser} object using the specified source
-	 * @param source a source, containing the parsing information
-	 */
-	public Parser(ParserSource source) {
-		this.source = source;
-		source.nextChar();
+	public Program parseProgram(List<String> lines) throws ParserException {
+		Map<String, Function> functions = new HashMap<>();
+		for (line = 0; line < lines.size() - 1; line++) {
+			this.source = new StringParserSource(lines.get(line));
+			Function f = parseFunctionDefinition();
+			functions.put(f.getName(), f);
+		}
+		this.source = new StringParserSource(lines.get(lines.size() - 1));
+		return new Program(functions, parseValue());
 	}
-	
 	
 	/**
 	 * Parses an expression from the parser's source
 	 *
-	 * @param line is the line, at which the expression takes place
 	 * @return an {@code Expression} object, representing the parsed expression
 	 * @throws ParserException if the expression is malformed
 	 */
-	public Expression parseValue(int line) throws ParserException {
-		this.line = line;
+	private Expression parseValue() throws ParserException {
+		source.nextChar();
 		Expression result = parseExpression();
 		if (!test(ParserSource.END)) {
 			throw source.error();
@@ -56,13 +57,11 @@ public class Parser {
 	
 	/**
 	 * Parses a function from the parser's source
-	 *
-	 * @param line is the line, at which the function takes place
 	 * @return an {@code Function} object, representing the parsed function
 	 * @throws ParserException if the function definition is malformed
 	 */
-	public Function parseFunctionDefinition(int line) throws ParserException {
-		this.line = line;
+	private Function parseFunctionDefinition() throws ParserException {
+		source.nextChar();
 		String name = parseIdentifier();
 		List<String> params = parseParams();
 		if (doesntMatch("={")) {

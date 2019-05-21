@@ -1,12 +1,8 @@
 package main.java.elements;
 
 import main.java.exceptions.EvaluatingException;
-import main.java.exceptions.ParserException;
-import main.java.parser.Parser;
-import main.java.parser.StringParserSource;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,27 +15,17 @@ public class Program {
 	private final Map<String, Function> functions;
 	private final Expression init;
 	
+	/**
+	 * Constructs a Program from a list of function definitions
+	 * and an expression at the last position.
+	 * @param functions a list of function definitions and an expression
+	 * @param init the inital expression to be called on startup
+	 */
 	public Program(Map<String, Function> functions, Expression init) {
 		this.functions = functions;
 		this.init = init;
 	}
 	
-	/**
-	 * Constructs a Program from a list of function definitions
-	 * and an expression at the last position.
-	 * @param lines a list of function definitions and an expression
-	 * @throws ParserException if the function definitions and/or the expression are malformed
-	 */
-	public Program(List<String> lines) throws ParserException {
-		Map<String, Function> functions = new HashMap<>();
-		for (int i = 0; i < lines.size() - 1; i++) {
-			Parser parser = new Parser(new StringParserSource(lines.get(i)));
-			Function f = parser.parseFunctionDefinition(i);
-			functions.put(f.getName(), f);
-		}
-		this.functions = functions;
-		init = new Parser(new StringParserSource(lines.get(lines.size() - 1))).parseValue(lines.size() - 1);
-	}
 	
 	/**
 	 * Evaluates the initial expression
@@ -49,5 +35,14 @@ public class Program {
 	 */
 	public int run() throws EvaluatingException {
 		return init.evaluate(new HashMap<>(), functions);
+	}
+	
+	// for testing purposes
+	public Map<String, Function> getFunctions() {
+		return functions;
+	}
+	// for testing purposes
+	public Expression getInit() {
+		return init;
 	}
 }
