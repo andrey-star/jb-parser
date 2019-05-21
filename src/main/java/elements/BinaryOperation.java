@@ -1,32 +1,24 @@
 package main.java.elements;
 
-import java.util.Map;
 import java.util.function.BinaryOperator;
 
 public class BinaryOperation {
 	
-	private static final Map<String, BinaryOperator<Integer>> opIdentifierToOperation = Map.of(
-			"+", Integer::sum,
-			"-", (a, b) -> a - b,
-			"*", (a, b) -> a * b,
-			"/", (a, b) -> a / b,
-			">", (a, b) -> (a > b ? 1 : 0),
-			"<", (a, b) -> (a < b ? 1 : 0),
-			"=", (a, b) -> (a.equals(b) ? 1 : 0)
-	);
-	private final String operation;
+	private final BinaryOperator<Integer> operation;
+	private final String opIdentifier;
 	
-	public BinaryOperation(String operation) {
+	public BinaryOperation(BinaryOperator<Integer> operation, String opIdentifier) {
 		this.operation = operation;
+		this.opIdentifier = opIdentifier;
 	}
 	
 	int apply(int a, int b) {
-		return opIdentifierToOperation.get(operation).apply(a, b);
+		return operation.apply(a, b);
 	}
 	
 	@Override
 	public String toString() {
-		return operation;
+		return opIdentifier;
 	}
 	
 }

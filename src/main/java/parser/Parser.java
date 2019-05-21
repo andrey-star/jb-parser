@@ -6,7 +6,8 @@ import main.java.util.ParserSupplier;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.function.BinaryOperator;
 
 /**
  * The {@code Parser } class represents a utility, used for parsing
@@ -15,7 +16,16 @@ import java.util.Set;
 public class Parser {
 	
 	private final ParserSource source;
-	private final Set<String> binaryOperators = Set.of("+", "-", "*", "/", ">", "<", "=");
+	private final Map<String, BinaryOperator<Integer>> BINARY_OPERATIONS = Map.of(
+			"+", Integer::sum,
+			"-", (a, b) -> a - b,
+			"*", (a, b) -> a * b,
+			"/", (a, b) -> a / b,
+			"%", (a, b) -> a % b,
+			">", (a, b) -> (a > b ? 1 : 0),
+			"<", (a, b) -> (a < b ? 1 : 0),
+			"=", (a, b) -> (a.equals(b) ? 1 : 0)
+	);
 	private int line = 0;
 	
 	/**
@@ -26,6 +36,7 @@ public class Parser {
 		this.source = source;
 		source.nextChar();
 	}
+	
 	
 	/**
 	 * Parses an expression from the parser's source
@@ -118,10 +129,11 @@ public class Parser {
 	private Expression parseBinaryOperation() throws ParserException {
 		Expression left = parseExpression();
 		String operator = parseOperation();
-		if (!binaryOperators.contains(operator)) {
+		if (!BINARY_OPERATIONS.containsKey(operator)) {
 			throw source.error();
 		}
-		BinaryOperation op = new BinaryOperation(operator);
+		
+		BinaryOperation op = new BinaryOperation(BINARY_OPERATIONS.get(operator), operator);
 		Expression right = parseExpression();
 		if (!testNext(')')) {
 			throw source.error();
