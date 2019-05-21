@@ -12,7 +12,7 @@ import java.util.function.BinaryOperator;
 
 /**
  * The {@code Parser } class represents a utility, used for parsing
- * function definitions and expressions.
+ * programs, function definitions and expressions.
  */
 public class Parser {
 	
@@ -29,6 +29,14 @@ public class Parser {
 	);
 	private int line = 0;
 	
+	/**
+	 *
+	 * @param lines the definition of the program, according to the syntax.
+	 *              First lines contains function definitions, the last line contains
+	 *              an expression to be called on startup
+	 * @return a {@code Program} object, parsed from the lines
+	 * @throws ParserException if the program definition does not follow the syntax
+	 */
 	public Program parseProgram(List<String> lines) throws ParserException {
 		Map<String, Function> functions = new HashMap<>();
 		for (line = 0; line < lines.size() - 1; line++) {
@@ -42,7 +50,6 @@ public class Parser {
 	
 	/**
 	 * Parses an expression from the parser's source
-	 *
 	 * @return an {@code Expression} object, representing the parsed expression
 	 * @throws ParserException if the expression is malformed
 	 */
@@ -57,7 +64,7 @@ public class Parser {
 	
 	/**
 	 * Parses a function from the parser's source
-	 * @return an {@code Function} object, representing the parsed function
+	 * @return a {@code Function} object, representing the parsed function
 	 * @throws ParserException if the function definition is malformed
 	 */
 	private Function parseFunctionDefinition() throws ParserException {

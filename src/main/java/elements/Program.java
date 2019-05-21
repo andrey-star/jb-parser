@@ -19,13 +19,12 @@ public class Program {
 	 * Constructs a Program from a list of function definitions
 	 * and an expression at the last position.
 	 * @param functions a list of function definitions and an expression
-	 * @param init the inital expression to be called on startup
+	 * @param init the initial expression to be called on startup
 	 */
 	public Program(Map<String, Function> functions, Expression init) {
 		this.functions = functions;
 		this.init = init;
 	}
-	
 	
 	/**
 	 * Evaluates the initial expression
