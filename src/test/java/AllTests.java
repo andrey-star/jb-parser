@@ -55,6 +55,7 @@ public class AllTests {
 		assertParseValueError("1>3");
 		assertParseValueError("(1|0)");
 		assertParseValueError("(1 0)");
+		assertParseValueError("(1 0)88");
 	}
 	
 	@Test
@@ -80,6 +81,7 @@ public class AllTests {
 		assertParseValueError("[(xy)]?{1}:{0}");
 		assertParseValueError("[(xy)+(yz)]?{1}:{0}");
 		assertParseValueError("[1>2]?{1}:{}");
+		assertParseValueError("[1>2]?{1}:{}88");
 	}
 	
 	@Test
@@ -97,6 +99,8 @@ public class AllTests {
 		assertEvalError("PARAMETER NOT FOUND y:1", "f(x)={y}", "f(10)");
 		assertEvalError("FUNCTION NOT FOUND f:1", "g(x)={f(x)}", "g(10)");
 		assertParseFunctionError("g(h, b)={z((h+b))}");
+		assertParseFunctionError("g(h,b)={z((h+b))}ghjh");
+		assertParseFunctionError("g|(h,b)={z((h+b))}");
 		assertParseFunctionError("f(x,y a,z)={((g(x)+x)+h(z))}");
 		assertParseFunctionError("g(h, b)={z((h+b))}");
 		assertParseFunctionError("(x,y a,z)={((g(x)+x)+h(z))}");
@@ -118,6 +122,7 @@ public class AllTests {
 		assertEvalError("ARGUMENT NUMBER MISMATCH h:1", "g(k)={h(((k+2)*3))}", "h(x,y,z)={x}", "g(2)");
 		assertEvalError("ARGUMENT NUMBER MISMATCH g:2", "g(x)={(x+1)}", "g(10,20)");
 		assertParseValueError("1 + 2 + 3 + 4 + 5");
+		assertParseValueError("g(1)67");
 		
 	}
 	

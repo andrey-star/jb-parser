@@ -26,7 +26,7 @@ public class Program {
 	
 	/**
 	 * Constructs a Program from a list of function definitions
-	 * and an expression at the last place.
+	 * and an expression at the last position.
 	 * @param lines a list of function definitions and an expression
 	 * @throws ParserException if the function definitions and/or the expression are malformed
 	 */
@@ -38,8 +38,7 @@ public class Program {
 			functions.put(f.getName(), f);
 		}
 		this.functions = functions;
-		Parser parser = new Parser(new StringParserSource(lines.get(lines.size() - 1)));
-		init = parser.parseValue(lines.size() - 1);
+		init = new Parser(new StringParserSource(lines.get(lines.size() - 1))).parseValue(lines.size() - 1);
 	}
 	
 	/**

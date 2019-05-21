@@ -34,16 +34,16 @@ public class Function {
 	
 	/**
 	 * Calls the function with the given parameter values.
-	 * @param argValues the values of the function parameters
+	 * @param paramValues the values of the function parameters
 	 * @param functions a list of available functions
 	 * @return the result of calling the function
 	 * @throws EvaluatingException if the the function or the the body are malformed,
 	 * if the list of arguments is incorrect.
 	 */
-	int call(List<Integer> argValues, Map<String, Function> functions) throws EvaluatingException {
+	int call(List<Integer> paramValues, Map<String, Function> functions) throws EvaluatingException {
 		Map<String, Integer> scope = new HashMap<>();
-		for (int i = 0; i < argValues.size(); i++) {
-			scope.put(params.get(i), argValues.get(i));
+		for (int i = 0; i < paramValues.size(); i++) {
+			scope.put(params.get(i), paramValues.get(i));
 		}
 		if (scope.size() != params.size()) {
 			throw new DuplicateArgumentsException(name, line);

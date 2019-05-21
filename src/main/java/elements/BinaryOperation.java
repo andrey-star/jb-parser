@@ -29,11 +29,4 @@ public class BinaryOperation {
 		return operation;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof BinaryOperation) {
-			return operation.equals(((BinaryOperation) obj).operation);
-		}
-		return false;
-	}
 }

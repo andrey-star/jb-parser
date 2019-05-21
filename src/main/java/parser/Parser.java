@@ -24,6 +24,7 @@ public class Parser {
 	 */
 	public Parser(ParserSource source) {
 		this.source = source;
+		source.nextChar();
 	}
 	
 	/**
@@ -35,7 +36,6 @@ public class Parser {
 	 */
 	public Expression parseValue(int line) throws ParserException {
 		this.line = line;
-		source.nextChar();
 		Expression result = parseExpression();
 		if (!test(ParserSource.END)) {
 			throw source.error();
@@ -52,9 +52,8 @@ public class Parser {
 	 */
 	public Function parseFunctionDefinition(int line) throws ParserException {
 		this.line = line;
-		source.nextChar();
 		String name = parseIdentifier();
-		List<String> args = parseParams();
+		List<String> params = parseParams();
 		if (doesntMatch("={")) {
 			throw source.error();
 		}
@@ -62,7 +61,10 @@ public class Parser {
 		if (!testNext('}')) {
 			throw source.error();
 		}
-		return new Function(name, args, body, line);
+		if (!test(ParserSource.END)) {
+			throw source.error();
+		}
+		return new Function(name, params, body, line);
 	}
 	
 	private Expression parseExpression() throws ParserException {
@@ -92,20 +94,20 @@ public class Parser {
 		return parseArgs(this::parseExpression);
 	}
 	
-	private <T> List<T> parseArgs(ParserSupplier<T> argument) throws ParserException {
+	private <T> List<T> parseArgs(ParserSupplier<T> argSupplier) throws ParserException {
 		if (!testNext('(')) {
 			throw source.error();
 		}
 		List<T> args = new ArrayList<>();
+		if (testNext(')')) {
+			return args;
+		}
 		while (true) {
-			if (source.testNext(')')) {
+			args.add(argSupplier.get());
+			if (testNext(')')) {
 				break;
 			}
-			args.add(argument.get());
-			if (source.testNext(')')) {
-				break;
-			}
-			if (source.testNext(',')) {
+			if (testNext(',')) {
 				continue;
 			}
 			throw source.error();
@@ -181,7 +183,12 @@ public class Parser {
 	}
 	
 	private boolean testNext(char c) {
-		return source.testNext(c);
+		if (source.getChar() == c) {
+			source.nextChar();
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	private boolean doesntMatch(String s) {
@@ -194,7 +201,7 @@ public class Parser {
 	}
 	
 	private boolean test(char c) {
-		return source.test(c);
+		return source.getChar() == c;
 	}
 	
 }

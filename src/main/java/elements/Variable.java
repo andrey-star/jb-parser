@@ -18,15 +18,6 @@ public class Variable extends Expression {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof Variable) {
-			return name.equals(((Variable) obj).name);
-		}
-		return false;
-		
-	}
-	
-	@Override
 	public String toString() {
 		return name;
 	}

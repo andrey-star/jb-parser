@@ -34,8 +34,8 @@ public class CallExpression extends Expression {
 	@Override
 	public int evaluate(Map<String, Integer> scope, Map<String, Function> functions) throws EvaluatingException {
 		List<Integer> evaluated = new ArrayList<>();
-		for (Expression expression : args) {
-			evaluated.add(expression.evaluate(scope, functions));
+		for (Expression arg : args) {
+			evaluated.add(arg.evaluate(scope, functions));
 		}
 		if (!functions.containsKey(functionName)) {
 			throw new FunctionNotFoundException(functionName, line);
@@ -45,15 +45,6 @@ public class CallExpression extends Expression {
 			throw new ArgumentNumberMismatchException(functionName, line);
 		}
 		return functions.get(functionName).call(evaluated, functions);
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof CallExpression) {
-			return functionName.equals(((CallExpression) obj).functionName)
-					&& args.equals(((CallExpression) obj).args);
-		}
-		return false;
 	}
 	
 	@Override

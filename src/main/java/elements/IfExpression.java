@@ -25,24 +25,13 @@ public class IfExpression extends Expression {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof IfExpression) {
-			return condition.equals(((IfExpression) obj).condition)
-					&& ifTrue.equals(((IfExpression) obj).ifTrue)
-					&& ifFalse.equals(((IfExpression) obj).ifFalse);
-		}
-		return false;
-	}
-	
-	@Override
 	public String toString() {
 		return "[" + condition + "]?{" + ifTrue + "}:{" + ifFalse + "}";
 	}
 	
 	@Override
 	public int evaluate(Map<String, Integer> scope, Map<String, Function> functions) throws EvaluatingException {
-		return condition.evaluate(scope, functions) != 0 ?
-				ifTrue.evaluate(scope, functions) :
-				ifFalse.evaluate(scope, functions);
+		return condition.evaluate(scope, functions) != 0
+				? ifTrue.evaluate(scope, functions) : ifFalse.evaluate(scope, functions);
 	}
 }

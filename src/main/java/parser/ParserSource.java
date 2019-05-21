@@ -20,19 +20,6 @@ abstract class ParserSource {
 		return c;
 	}
 	
-	boolean test(char c) {
-		return getChar() == c;
-	}
-	
-	boolean testNext(char c) {
-		if (getChar() == c) {
-			nextChar();
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
 	ParserException error() {
 		return new ParserException("SYNTAX ERROR");
 	}
