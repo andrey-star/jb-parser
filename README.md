@@ -18,7 +18,7 @@
     <binary-expression> ::= "(" <expression> <operation> <expression>  ")"
     <argument-list> ::= <expression> | <expression> "," <argument-list>
     <call-expression> ::= <identifier> "(" <argument-list> ")"
-    <if-expression> ::= "[" <expression> "]?(" <expression> "):("<expression>")"
+    <if-expression> ::= "[" <expression> "]?{" <expression> "}:{"<expression>"}"
 
     <expression> ::= <identifier>
                       | <constant-expression>
