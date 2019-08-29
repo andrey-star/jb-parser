@@ -1,8 +1,8 @@
-Необходимо реализовать интерпретатор языка, описанного ниже. 
-На стандартный вход подается программа на данном языке. 
-Необходимо вывести значение последнего выражения в программе в десятичной системе счисления
+Implement an interpreter for the language described below.
+The standard input recieves a program in the given language.
+Output the decimal value of the last expression in the program.
 
-Язык задан следующей грамматикой:
+Language grammar:
 
     <character>  ::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" 
     | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" 
@@ -36,14 +36,14 @@
 
     <program> ::= <function-definition-list> <expression>
 
-`<EOL>` - символ перевода строки --- `\n`, программа не содержит других пробельных символов(пробел, табуляция, и т.д.);
+`<EOL>` - newline symbol - `\n`, the program doesn't contain other whitepsace characters.
 
-Семантика языка задается следующим образом:
+Language semantics:
 
-1.  Все переменные имеют тип 32-битный Integer;
-2.  Гарантируется, что вычисления не приводят к переполнению;
-3.  Все арифметические операции аналогичны соответствующим операциям для 32-битного int в языке Java;
-4.  Операции сравнения возвращают 1 если сравнение истинно и 0 если ложно;
-5.  <if-expression> исполняет второе выражение, если первое выражение не равно 0; иначе исполняет третье;
-6.  <call-expression> вызывает функцию с соответствующим именем
-7.  Выражения вычисляются слева направо;
+1.  All variables are 32-bit integers
+2.  Overflows do not occur
+3.  All arithmetic operations are equivalent to corresponding ones in Java
+4.  Comparison operations return 1 if true, 0 otherwise
+5.  <if-expression> evaluates the second expression, if the first is not 0, otherwise it evaluates the third
+6.  <call-expression> calls function with given name
+7.  Expressions are evaluated left to right
