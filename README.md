@@ -44,6 +44,6 @@ Language semantics:
 2.  Overflows do not occur
 3.  All arithmetic operations are equivalent to corresponding ones in Java
 4.  Comparison operations return 1 if true, 0 otherwise
-5.  <if-expression> evaluates the second expression, if the first is not 0, otherwise it evaluates the third
-6.  <call-expression> calls function with given name
+5.  `<if-expression>` evaluates the second expression, if the first is not 0, otherwise it evaluates the third
+6.  `<call-expression>` calls function with given name
 7.  Expressions are evaluated left to right
