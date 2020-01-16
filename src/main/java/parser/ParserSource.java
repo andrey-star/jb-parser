@@ -1,6 +1,6 @@
 package main.java.parser;
 
-import main.java.exceptions.ParserException;
+import main.java.exception.ParserException;
 
 abstract class ParserSource {
 	static final char END = '\0';

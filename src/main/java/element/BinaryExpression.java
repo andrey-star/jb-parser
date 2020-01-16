@@ -1,7 +1,7 @@
-package main.java.elements;
+package main.java.element;
 
-import main.java.exceptions.EvaluatingException;
-import main.java.exceptions.RuntimeException;
+import main.java.exception.EvaluatingException;
+import main.java.exception.RuntimeException;
 
 import java.util.Map;
 

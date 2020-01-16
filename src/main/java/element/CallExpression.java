@@ -1,8 +1,8 @@
-package main.java.elements;
+package main.java.element;
 
-import main.java.exceptions.ArgumentNumberMismatchException;
-import main.java.exceptions.EvaluatingException;
-import main.java.exceptions.FunctionNotFoundException;
+import main.java.exception.ArgumentNumberMismatchException;
+import main.java.exception.EvaluatingException;
+import main.java.exception.FunctionNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;

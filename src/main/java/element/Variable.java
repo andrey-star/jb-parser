@@ -1,6 +1,6 @@
-package main.java.elements;
+package main.java.element;
 
-import main.java.exceptions.ParameterNotFoundException;
+import main.java.exception.ParameterNotFoundException;
 
 import java.util.Map;
 

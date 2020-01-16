@@ -1,6 +1,6 @@
 package main.java.util;
 
-import main.java.exceptions.ParserException;
+import main.java.exception.ParserException;
 
 @FunctionalInterface
 public interface ParserSupplier<T> {

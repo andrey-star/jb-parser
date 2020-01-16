@@ -1,7 +1,7 @@
 package main.java.parser;
 
-import main.java.elements.*;
-import main.java.exceptions.ParserException;
+import main.java.element.*;
+import main.java.exception.ParserException;
 import main.java.util.ParserSupplier;
 
 import java.util.ArrayList;

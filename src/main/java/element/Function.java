@@ -1,7 +1,7 @@
-package main.java.elements;
+package main.java.element;
 
-import main.java.exceptions.DuplicateArgumentsException;
-import main.java.exceptions.EvaluatingException;
+import main.java.exception.DuplicateArgumentsException;
+import main.java.exception.EvaluatingException;
 
 import java.util.HashMap;
 import java.util.List;

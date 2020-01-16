@@ -1,4 +1,4 @@
-package main.java.elements;
+package main.java.element;
 
 /**
  * The {@code Expression} class represents an expression, that

@@ -1,10 +1,10 @@
 package test.java;
 
-import main.java.elements.Expression;
-import main.java.elements.Function;
-import main.java.elements.Program;
-import main.java.exceptions.EvaluatingException;
-import main.java.exceptions.ParserException;
+import main.java.element.Expression;
+import main.java.element.Function;
+import main.java.element.Program;
+import main.java.exception.EvaluatingException;
+import main.java.exception.ParserException;
 import main.java.parser.Parser;
 import org.junit.Assert;
 import org.junit.Test;

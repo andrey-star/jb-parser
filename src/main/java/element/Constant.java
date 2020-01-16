@@ -1,4 +1,4 @@
-package main.java.elements;
+package main.java.element;
 
 import java.util.Map;
 

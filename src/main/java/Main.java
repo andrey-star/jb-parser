@@ -1,8 +1,8 @@
 package main.java;
 
-import main.java.elements.Program;
-import main.java.exceptions.EvaluatingException;
-import main.java.exceptions.ParserException;
+import main.java.element.Program;
+import main.java.exception.EvaluatingException;
+import main.java.exception.ParserException;
 import main.java.parser.Parser;
 
 import java.io.BufferedReader;

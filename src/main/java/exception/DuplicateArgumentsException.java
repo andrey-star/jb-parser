@@ -1,4 +1,4 @@
-package main.java.exceptions;
+package main.java.exception;
 
 public class DuplicateArgumentsException extends EvaluatingException {
 	
