@@ -1,5 +1,5 @@
 Implement an interpreter for the language described below.
-The standard input recieves a program in the given language.
+The standard input receives a program in the given language.
 Output the decimal value of the last expression in the program.
 
 Language grammar:
